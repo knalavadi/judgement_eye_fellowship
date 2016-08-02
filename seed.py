@@ -47,23 +47,20 @@ def load_movies():
         row = row.split("|")[0:5]
         movie_id, title, released_at, video_release_date, imdb_url = row
 
+        #string parse time and assign it to the object released_at_obj
         if released_at:
-            release_at = datetime.strptime(released_at, "%d-%b-%Y")
+            released_at_obj = datetime.strptime(released_at, "%d-%b-%Y")
         else:
-            release_at = None
-
-        return released_at
+            released_at_obj = None
 
         title = title[:-7]
 
-        movies = Movie(movie_id=movie_id,
-                      title=title,
-                      released_at=released_at,
+        #creating an instance of the class movies and assigning it to movi
+        movie = Movie(title=title,
+                      released_at=released_at_obj,
                       imdb_url=imdb_url)
 
-        return movies
-
-        db.session.add(movies)
+        db.session.add(movie)
 
     db.session.commit()
 
@@ -71,17 +68,15 @@ def load_movies():
 def load_ratings():
     """Load ratings from u.data into database."""
 
-
     print "ratings"
 
     Rating.query.delete()
 
     for row in open("seed_data/u.data"):
         row = row.rstrip()
-        rating_id, movie_id, user_id, score = row.split("|")
+        rating_id, movie_id, user_id, score = row.split("\t")
 
-        ratings = Rating(rating_id=rating_id,
-                      movie_id=movie_id,
+        ratings = Rating(movie_id=movie_id,
                       user_id=user_id,
                       score=score)
 
@@ -110,7 +105,7 @@ if __name__ == "__main__":
     db.create_all()
 
     # Import different types of data
-    # load_users()
-    # load_movies()
-    # load_ratings()
-    # set_val_user_id()
+    load_users()
+    load_movies()
+    load_ratings()
+    set_val_user_id()
