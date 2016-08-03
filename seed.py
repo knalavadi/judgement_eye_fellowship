@@ -55,7 +55,7 @@ def load_movies():
 
         title = title[:-7]
 
-        #creating an instance of the class movies and assigning it to movi
+        #creating an instance of the class movies and assigning it to movie
         movie = Movie(title=title,
                       released_at=released_at_obj,
                       imdb_url=imdb_url)
@@ -74,10 +74,10 @@ def load_ratings():
 
     for row in open("seed_data/u.data"):
         row = row.rstrip()
-        rating_id, movie_id, user_id, score = row.split("\t")
+        user_id, movie_id, score, timestamp = row.split("\t")
 
-        ratings = Rating(movie_id=movie_id,
-                      user_id=user_id,
+        ratings = Rating(user_id=user_id,
+                      movie_id=movie_id,
                       score=score)
 
         db.session.add(ratings)

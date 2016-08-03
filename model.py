@@ -26,7 +26,7 @@ class User(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed"""
 
-        return "<User user_id=%s, email=%s>" % (self.user_id, self.email)
+        return "<User user_id=%s, email=%s, password=%s, age=%s, zipcode=%s>" % (self.user_id, self.email, self.password, self.age, self.zipcode)
 
 
 
@@ -43,11 +43,10 @@ class Movie(db.Model):
     released_at = db.Column(db.DateTime, nullable=True)
     imdb_url = db.Column(db.String(300), nullable=True)
 
-
     def __repr__(self):
         """Provide helpful representation when printed"""
 
-        return "<Movie movie_id=%s, title=%s>" % (self.movie_id, self.title)
+        return "<Movie movie_id=%s, title=%s, released_at=%s, imdb_url=%s>" % (self.movie_id, self.title, self.released_at, self.imdb_url)
 
 
 ##############################################################################
@@ -59,15 +58,16 @@ class Rating(db.Model):
     __tablename__ = "ratings"
 
     rating_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    movie_id = db.Column(db.Integer, nullable=True)
-    user_id = db.Column(db.Integer, nullable=True)
+    movie_id = db.Column(db.Integer, db.ForeignKey('movies.movie_id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=True)
     score = db.Column(db.Integer, nullable=True)
-
+    user = db.relationship('User',backref=db.backref("ratings", order_by=rating_id))
+    movie = db.relationship('Movie', backref=db.backref("ratings", order_by=rating_id))
 
     def __repr__(self):
         """Provide helpful representation when printed"""
 
-        return "<Ratings movie_id=%s, user_id=%s>" % (self.movie_id, self.user_id)
+        return "<Ratings rating_id=%s, movie_id=%s, user_id=%s, score=%s, user=%s>" % (self.rating_id, self.movie_id, self.user_id, self.score, self.user)
 
 
 ##############################################################################
