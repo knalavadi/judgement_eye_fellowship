@@ -24,6 +24,7 @@ def load_users():
         row = row.rstrip()
         user_id, age, gender, occupation, zipcode = row.split("|")
 
+        # creates instance to add row to table
         user = User(user_id=user_id,
                     age=age,
                     zipcode=zipcode)

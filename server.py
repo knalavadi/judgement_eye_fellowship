@@ -36,35 +36,53 @@ def user_list():
 
 @app.route('/register', methods=['GET'])
 def register_form():
-    """Register form for new users."""
-    
-    username = request.args.get("username")
-    password = request.args.get("password")
+    """Renders template only."""
 
-    if (new_user = db.session.query(User.email == username)) and 
-        (db.session.query(User.password == password)):
-
-    else:
-        db.session.add(username)
-        db.session.add(password)
-        db.session.commit()
-
-    return render_template("register_form.html",
-                            username=username,
-                            password=password,
-                            new_user=new_user)
+    return render_template("register_form.html")
 
 
 @app.route('/register', methods=['POST'])
 def register_process():
     """Redirects to homepage after submission for registered users."""
 
-    username = request.form.get("username")
+    email = request.form.get("email")
     password = request.form.get("password")
 
-    registered_user = db.session.query(User.user_id, User.password).all()
+    db_user = User.query.filter(email == email).first()
+    db_password = User.query.filter(password == password).first()
+
+    if db_user.email == email:
+        
+        if db_password == password:
+            session["user"] = email #keeps track of who logged in
+            flash("successfully logged in")
+            return redirect("/")
+        
+        else:
+            flash("Password is incorrect.")
+            return redirect('/register')
+
+    else:
+        user = User(email=email, password=password)
+        db.session.add(user)
+        db.session.commit()
 
     return redirect("/")
+
+    render_template("base.html")
+
+# @app.route("/logged_out")
+# def logged_out_process():
+
+@app.route('/user_details')
+def user_details():
+    """Show details of a user."""
+
+    active_user = session["user"] 
+
+    user=User.query.filter(email = active_user).first()
+
+    return render_template("user_details.html")
 
 
 if __name__ == "__main__":

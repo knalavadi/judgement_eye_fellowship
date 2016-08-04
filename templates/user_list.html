@@ -1,22 +1,21 @@
 <html>
-    <head>
-        <title>User List</title>
-    </head>
-    <body>
-    {% extends 'base.html' %}
-    {% block content %}
+<head>
+    <title></title>
+</head>
+<body>
+    <form action="/users">
+        {% extends 'base.html' %}
+        {% block content %}
+
+        <h1>Ratings</h1>
+
+        <h2>Movies</h2>
+        <p><a href="/movies">View all movies</a></p>
 
         <h2>Users</h2>
-        <ul>
-          {% for user in users %}
-              <li>
-                  <a href="/users/{{ user.user_id }}">
-                    {{ user.email }} ({{ user.user_id }})
-                  </a>
-              </li>
-          {% endfor %}
-        </ul>
+        <p><a href="/users">View all users</a></p>
 
-    {% endblock %}
-    </body>
+        {% endblock %}
+    </form>
+</body>
 </html>
